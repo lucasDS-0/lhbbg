@@ -1,6 +1,7 @@
 -- hello.hs
 
-Import Html
+import Html
+
 
 main :: IO ()
 main = putStrLn (render myhtml) 
