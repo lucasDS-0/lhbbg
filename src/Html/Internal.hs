@@ -2,6 +2,9 @@
 
 module Html.Internal where
 
+import Numeric.Natural
+
+
 -- * Types
 
 newtype Html      = Html String
@@ -11,18 +14,21 @@ type Title        = String
 -- * EDSL
 
 html_ :: Title -> Structure -> Html
-html_ title content = 
+html_ title content =
     Html (el "html" 
         (el "head" (el "title" (escape title)) 
             <> el "body" (getStructureString content)
         )
     )
 
+empty_ :: Structure
+empty_ = Structure ""
+
 p_ :: String -> Structure
 p_ = Structure . el "p" . escape
 
-h1_ :: String -> Structure
-h1_ = Structure . el "h1" . escape
+h_ :: Natural -> String -> Structure
+h_ n = Structure . el ("h" <> show n) . escape
 
 ul_ :: [Structure] -> Structure
 ul_ = Structure . el "ul" . concat . map (el "li" . getStructureString)
@@ -32,9 +38,13 @@ ol_ = Structure . el "ol" . concat . map (el "li" . getStructureString)
 
 code_ :: String -> Structure
 code_ = Structure . el "pre" . escape
+    
+instance Semigroup Structure where
+  (<>) c1 c2 =
+    Structure (getStructureString c1 <> getStructureString c2)
 
-append_ :: Structure -> Structure -> Structure
-append_ (Structure s1) (Structure s2) = Structure (s1 <> s2)
+instance Monoid Structure where
+  mempty = empty_
 
 -- * Render
 

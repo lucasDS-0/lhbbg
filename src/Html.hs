@@ -2,7 +2,7 @@
 
 module Html
     ( Html, Title, Structure
-    , html_, p_, h1_, append_, ul_, ol_, code_
+    , html_, p_, h_, ul_, ol_, code_
     , render
     )
   where
